@@ -1,5 +1,3 @@
-require "spec_helper"
-
 RSpec.describe TallyCall do
   let(:klass) do
     Class.new do
