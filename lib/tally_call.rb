@@ -1,24 +1,33 @@
 require "tally_call/version"
 
 module TallyCall
-  def self.tally(klass, meth)
-    @tallys ||= Hash.new do |hash, key|
-      hash[key] = {}
+  class Tally
+    def initialize
+      @klass_methods = {}
     end
 
-    @tallys[klass][meth] = 0
-    # TODO: consider updating API
-    local_tallys = @tallys
+    def tally(klass, *methods)
+      @klass_methods[klass] ||= {}
 
-    klass.prepend(Module.new do
-      define_method(meth) do
-        local_tallys[klass][meth] += 1
-        super()
+      methods.each do |meth|
+        @klass_methods[klass][meth] = 0
       end
-    end)
-  end
+    end
 
-  def self.tally_from(klass)
-    @tallys[klass]
+    def start
+      TracePoint.trace(:call) do |tp|
+        next unless @klass_methods.key?(tp.defined_class)
+
+        method_tallys = @klass_methods[tp.defined_class]
+
+        next unless method_tallys.include?(tp.method_id)
+
+        method_tallys[tp.method_id] += 1
+      end
+    end
+
+    def from(klass)
+      @klass_methods[klass]
+    end
   end
 end
