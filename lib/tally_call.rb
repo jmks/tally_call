@@ -16,18 +16,24 @@ module TallyCall
 
     def start
       TracePoint.trace(:call) do |tp|
-        next unless @klass_methods.key?(tp.defined_class)
-
-        method_tallys = @klass_methods[tp.defined_class]
-
-        next unless method_tallys.include?(tp.method_id)
-
-        method_tallys[tp.method_id] += 1
+        tally_for(tp.defined_class, tp.method_id)
       end
     end
 
     def from(klass)
       @klass_methods[klass]
+    end
+
+    private
+
+    def tally_for(klass, meth)
+      return unless method_tallied?(klass, meth)
+
+      @klass_methods[klass][meth] += 1
+    end
+
+    def method_tallied?(klass, meth)
+      @klass_methods.include?(klass) && @klass_methods[klass].include?(meth)
     end
   end
 end
