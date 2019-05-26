@@ -7,6 +7,10 @@ module TallyCall
 
         def method_2
         end
+
+        def uncalled_method
+          raise "Do NOT call me in the specs"
+        end
       end
     end
 
@@ -14,9 +18,9 @@ module TallyCall
 
     describe "#tally" do
       it "tally of zero for methods not called" do
-        tally_method_calls_of(:method_not_called)
+        tally_method_calls_of(:uncalled_method)
 
-        expect(tally.for(klass)).to include(method_not_called: 0)
+        expect(tally.for(klass)).to include(uncalled_method: 0)
       end
 
       it "tallys calls to a method" do
@@ -33,6 +37,14 @@ module TallyCall
         call_methods(:method_1, :method_1, :method_2)
 
         expect(tally.for(klass)).to include(method_1: 2, method_2: 1)
+      end
+
+      context "when tallying method that does not exist on the class" do
+        it "raises" do
+          expect do
+            tally_method_calls_of(:unexpected_method)
+          end.to raise_error(NoMethodError, /does not implement method unexpected_method/)
+        end
       end
     end
 

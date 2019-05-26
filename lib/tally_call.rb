@@ -10,6 +10,7 @@ module TallyCall
       @klass_methods[klass] ||= {}
 
       methods.each do |meth|
+        raise NoMethodError, "#{klass.name} does not implement method #{meth}" unless klass.method_defined?(meth)
         @klass_methods[klass][meth] = 0
       end
     end
