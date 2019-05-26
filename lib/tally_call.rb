@@ -20,7 +20,7 @@ module TallyCall
       end
     end
 
-    def from(klass)
+    def for(klass)
       @klass_methods[klass]
     end
 
