@@ -47,7 +47,7 @@ module TallyCall
         it "raises" do
           expect do
             tally_method_calls_of(:unexpected_method)
-          end.to raise_error(NoMethodError, /does not implement method unexpected_method/)
+          end.to raise_error(NoMethodError, /TestClass does not implement method unexpected_method/)
         end
       end
     end
