@@ -2,6 +2,10 @@ module TallyCall
   RSpec.describe Tally do
     let(:klass) do
       Class.new do
+        def self.name
+          "TestClass"
+        end
+
         def method_1
         end
 
@@ -45,6 +49,16 @@ module TallyCall
             tally_method_calls_of(:unexpected_method)
           end.to raise_error(NoMethodError, /does not implement method unexpected_method/)
         end
+      end
+    end
+
+    describe "#report" do
+      it "includes all tallys as strings" do
+        tally_method_calls_of(:method_1, :method_2)
+
+        call_methods(:method_1, :method_2, :method_2)
+
+        expect(tally.report).to eq({ "TestClass" => { "method_1" => 1, "method_2" => 2 }})
       end
     end
 

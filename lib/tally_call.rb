@@ -25,6 +25,16 @@ module TallyCall
       @klass_methods[klass]
     end
 
+    def report
+      @klass_methods.each_with_object({}) do |(klass, method_tallys), acc|
+        method_counts = method_tallys.each_with_object({}) do |(meth, tally), memo|
+          memo[meth.to_s] = tally
+        end
+
+        acc[klass.name] = method_counts
+      end
+    end
+
     private
 
     def tally_for(klass, meth)
