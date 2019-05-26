@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "tally_call"
   spec.version       = TallyCall::VERSION
   spec.authors       = ["Jason Schweier"]
-  spec.email         = ["jasons@nulogy.com"]
+  spec.email         = ["jason.schweier@gmail.com"]
 
   spec.summary       = %q{A simple way to track method calls on Objects}
   spec.homepage      = "https://www.github.com/jmks/tally_call"

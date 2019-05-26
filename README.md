@@ -1,38 +1,61 @@
 # TallyCall
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tally_call`. To experiment with that code, run `bin/console` for an interactive prompt.
+A gem to provide a simple API to track method calls.
 
-TODO: Delete this and the text above, and describe your gem
+Attempting to experiment with different implementations.
+
+### Available
+
+* `TallyCall::Trace` using Ruby's `TracePoint`.
+
+### Experiments
+
+* Use `Method#prepend` to wrap any method call (e.g. instance, singleton, any parameters)
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'tally_call'
+gem "tally_call", git: "https://www.github.com/jmks/tally_call"
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install tally_call
-
 ## Usage
 
-TODO: Write usage instructions here
+The best place for examples should be the specs.
 
-## Development
+### TallyCall::Trace
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```
+class Target
+  def target_method
+    # ...
+  end
+end
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+trace = TallyCall::Trace.new
+
+trace.tally(Target, :target_method)
+trace.start
+
+# let some app code run
+t = Target.new
+t.target_method
+t.target_method
+
+# access your results
+puts trace.report
+# { "Target" => { "target_method" => 2 } }
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/tally_call.
+Bug reports and pull requests are welcome on GitHub at https://github.com/jmks/tally_call.
 
 ## License
 
