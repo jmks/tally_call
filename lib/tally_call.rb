@@ -1,7 +1,7 @@
 require "tally_call/version"
 
 module TallyCall
-  class Tally
+  class Trace
     def initialize
       @klass_methods = {}
     end

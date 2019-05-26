@@ -1,5 +1,5 @@
 module TallyCall
-  RSpec.describe Tally do
+  RSpec.describe Trace do
     let(:klass) do
       Class.new do
         def self.name
@@ -18,13 +18,13 @@ module TallyCall
       end
     end
 
-    let(:tally) { Tally.new }
+    let(:trace) { Trace.new }
 
     describe "#tally" do
       it "tally of zero for methods not called" do
         tally_method_calls_of(:uncalled_method)
 
-        expect(tally.for(klass)).to include(uncalled_method: 0)
+        expect(trace.for(klass)).to include(uncalled_method: 0)
       end
 
       it "tallys calls to a method" do
@@ -32,7 +32,7 @@ module TallyCall
 
         call_methods(:method_1)
 
-        expect(tally.for(klass)).to include(method_1: 1)
+        expect(trace.for(klass)).to include(method_1: 1)
       end
 
       it "tallys calls to multiple methods" do
@@ -40,7 +40,7 @@ module TallyCall
 
         call_methods(:method_1, :method_1, :method_2)
 
-        expect(tally.for(klass)).to include(method_1: 2, method_2: 1)
+        expect(trace.for(klass)).to include(method_1: 2, method_2: 1)
       end
 
       context "when tallying method that does not exist on the class" do
@@ -58,13 +58,13 @@ module TallyCall
 
         call_methods(:method_1, :method_2, :method_2)
 
-        expect(tally.report).to eq({ "TestClass" => { "method_1" => 1, "method_2" => 2 }})
+        expect(trace.report).to eq({ "TestClass" => { "method_1" => 1, "method_2" => 2 }})
       end
     end
 
     def tally_method_calls_of(*methods)
-      tally.tally(klass, *methods)
-      tally.start
+      trace.tally(klass, *methods)
+      trace.start
     end
 
     def call_methods(*methods)
