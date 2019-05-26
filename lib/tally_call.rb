@@ -10,7 +10,8 @@ module TallyCall
       @klass_methods[klass] ||= {}
 
       methods.each do |meth|
-        raise NoMethodError, "#{klass.name} does not implement method #{meth}" unless klass.method_defined?(meth)
+        validate_method(klass, meth)
+
         @klass_methods[klass][meth] = 0
       end
     end
@@ -36,6 +37,12 @@ module TallyCall
     end
 
     private
+
+    def validate_method(klass, meth)
+      return if klass.method_defined?(meth)
+
+      raise NoMethodError, "#{klass.name} does not implement method #{meth}"
+    end
 
     def tally_for(klass, meth)
       return unless method_tallied?(klass, meth)
