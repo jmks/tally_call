@@ -10,18 +10,16 @@ module TallyCall
       end
     end
 
+    let(:tally) { Tally.new }
+
     it "a method that isn't called tally is zero" do
-      tally = Tally.new
-      tally.tally(klass, :method_not_called)
-      tally.start
+      tally_method_calls_of(:method_not_called)
 
       expect(tally.from(klass)).to include(method_not_called: 0)
     end
 
     it "counts calls to a method" do
-      tally = Tally.new
-      tally.tally(klass, :method_1)
-      tally.start
+      tally_method_calls_of(:method_1)
 
       call_methods(:method_1)
 
@@ -29,13 +27,16 @@ module TallyCall
     end
 
     it "counts calls to many methods" do
-      tally = Tally.new
-      tally.tally(klass, :method_1, :method_2)
-      tally.start
+      tally_method_calls_of(:method_1, :method_2)
 
       call_methods(:method_1, :method_1, :method_2)
 
       expect(tally.from(klass)).to include(method_1: 2, method_2: 1)
+    end
+
+    def tally_method_calls_of(*methods)
+      tally.tally(klass, *methods)
+      tally.start
     end
 
     def call_methods(*methods)
