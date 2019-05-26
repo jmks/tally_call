@@ -23,8 +23,7 @@ module TallyCall
       tally.tally(klass, :method_1)
       tally.start
 
-      instance = klass.new
-      instance.method_1
+      call_methods(:method_1)
 
       expect(tally.from(klass)).to include(method_1: 1)
     end
@@ -34,12 +33,17 @@ module TallyCall
       tally.tally(klass, :method_1, :method_2)
       tally.start
 
-      instance = klass.new
-      instance.method_1
-      instance.method_1
-      instance.method_2
+      call_methods(:method_1, :method_1, :method_2)
 
       expect(tally.from(klass)).to include(method_1: 2, method_2: 1)
+    end
+
+    def call_methods(*methods)
+      instance = klass.new
+
+      methods.each do |meth|
+        instance.public_send(meth)
+      end
     end
   end
 end
