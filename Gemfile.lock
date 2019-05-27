@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tally_call (0.1.0)
+    tally_call (0.1.1)
 
 GEM
   remote: https://rubygems.org/
